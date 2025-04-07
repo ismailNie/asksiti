@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Siti | SPE Department, NIE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    #header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #header img {
+      width: 50px;
+      height: 50px;
+    }
+    #header h1 {
+      margin: 10px 0 5px 0;
+    }
+    #header p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    #dropdown-box {
+      margin: 20px;
+    }
+    #dropdown-box select {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #chatbox {
+      width: 80%;
+      max-width: 600px;
+      margin: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #fff;
+    }
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    #messages div {
+      margin: 10px 0;
+    }
+    #input-box {
+      display: flex;
+      justify-content: space-between;
+    }
+    #input-box input {
+      width: 80%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #input-box button {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    #new-chat-button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #ff5733;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <div id="header">
+    <img src="logo.png" alt="Logo">
+    <h1>Ask Siti</h1>
+    <p>Designed by SPE Department, NIE</p>
+  </div>
+
+  <!-- Knowledge Base Dropdown -->
+  <div id="dropdown-box">
+    <label for="knowledge-base">Select Knowledge Base:</label>
+    <select id="knowledge-base">
+      <option value="spe-p1.txt">Project Uno by SPE</option>
+      <option value="spe-sop.txt">Team SOPs</option>
+    </select>
+  </div>
+
+  <!-- Chatbox -->
+  <div id="chatbox">
+    <div id="messages"></div>
+    <div id="input-box">
+      <input type="text" id="user-input" placeholder="Ask me anything..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+    <button id="new-chat-button" onclick="startNewChat()">New Chat</button>
+  </div>
+
+  <script>
+    let selectedKnowledgeBase = 'spe-p1.txt'; // Default knowledge base
+
+    // Trigger sendMessage when the Enter key is pressed
+    document.getElementById('user-input').addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Monitor changes to the dropdown
+    document.getElementById('knowledge-base').addEventListener('change', function () {
+      selectedKnowledgeBase = this.value;
+    });
+
+    function startNewChat() {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML = ''; // Clear all chat messages
+    }
+
+    async function sendMessage() {
+      const userInput = document.getElementById('user-input').value;
+      const messagesDiv = document.getElementById('messages');
+
+      if (!userInput.trim()) return;
+
+      // Display user's message
+      const userMessage = document.createElement('div');
+      userMessage.textContent = `You: ${userInput}`;
+      messagesDiv.appendChild(userMessage);
+
+      // Clear input field
+      document.getElementById('user-input').value = '';
+
+      try {
+        // Send message to the backend API
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt: userInput, knowledgeBase: selectedKnowledgeBase }),
+        });
+
+        const data = await response.json();
+
+        // Display chatbot's response
+        const botMessage = document.createElement('div');
+        botMessage.textContent = `Bot: ${data.reply}`;
+        messagesDiv.appendChild(botMessage);
+
+        // Scroll to the latest message
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      } catch (error) {
+        console.error(error);
+        const errorMessage = document.createElement('div');
+        errorMessage.textContent = 'Bot: Failed to respond. Please try again later.';
+        messagesDiv.appendChild(errorMessage);
+      }
+    }
+  </script>
+</body>
+</html>
