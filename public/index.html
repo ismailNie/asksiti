@@ -13,31 +13,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
       background-color: #f4f4f9;
     }
     #header {
       text-align: center;
-      margin-bottom: 20px;
     }
     #header img {
-      width: 50px;
-      height: 50px;
+      width: 150px;
+      height: auto;
+      margin-bottom: 25px;
     }
     #header h1 {
       margin: 10px 0 5px 0;
     }
     #header p {
-      font-size: 0.9rem;
+      font-size: small;
       color: #555;
     }
     #dropdown-box {
-      margin: 20px;
+      margin: 10px;
     }
     #dropdown-box select {
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      width: 250px;
     }
     #chatbox {
       width: 80%;
@@ -77,14 +77,13 @@
       background-color: #007bff;
       color: white;
       cursor: pointer;
+      width: 90px;
     }
     #new-chat-button {
       margin-top: 10px;
-      padding: 10px 20px;
       border-radius: 5px;
       border: none;
-      background-color: #ff5733;
-      color: white;
+      color: #ff5733;
       cursor: pointer;
     }
   </style>
@@ -98,7 +97,7 @@
 
   <!-- Knowledge Base Dropdown -->
   <div id="dropdown-box">
-    <label for="knowledge-base">I want to ask about:</label>
+    <label for="knowledge-base">I want to ask about</label>
     <select id="knowledge-base">
       <option value="spe-p1.txt">Project Uno by SPE</option>
       <option value="spe-sop.txt">Team SOPs</option>
