@@ -56,6 +56,10 @@
     #messages div {
       margin: 10px 0;
     }
+    #messages .highlight {
+      font-weight: bold;
+      color: #007bff;
+    }
     #input-box {
       display: flex;
       justify-content: space-between;
@@ -88,14 +92,13 @@
 <body>
   <!-- Header Section -->
   <div id="header">
-    <img src="logo.png" alt="Logo">
-    <h1>Ask Siti</h1>
-    <p>Designed by SPE Department, NIE</p>
+    <img src="asksiti_logo1.png" alt="Logo">
+    <p>Powered by SPE, NIE</p>
   </div>
 
   <!-- Knowledge Base Dropdown -->
   <div id="dropdown-box">
-    <label for="knowledge-base">Select Knowledge Base:</label>
+    <label for="knowledge-base">I want to ask about:</label>
     <select id="knowledge-base">
       <option value="spe-p1.txt">Project Uno by SPE</option>
       <option value="spe-sop.txt">Team SOPs</option>
@@ -113,7 +116,7 @@
   </div>
 
   <script>
-    let selectedKnowledgeBase = 'spe-p1.txt'; // Default knowledge base
+    let selectedKnowledgeBase = document.getElementById('knowledge-base').value; // Default knowledge base
 
     // Trigger sendMessage when the Enter key is pressed
     document.getElementById('user-input').addEventListener('keydown', function (event) {
@@ -126,13 +129,28 @@
     // Monitor changes to the dropdown
     document.getElementById('knowledge-base').addEventListener('change', function () {
       selectedKnowledgeBase = this.value;
+      addHighlightedMessage(`Asking about ${this.options[this.selectedIndex].text}`);
     });
 
+    // Add a highlighted message
+    function addHighlightedMessage(message) {
+      const messagesDiv = document.getElementById('messages');
+      const highlightedMessage = document.createElement('div');
+      highlightedMessage.className = 'highlight';
+      highlightedMessage.textContent = message;
+      messagesDiv.appendChild(highlightedMessage);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the latest message
+    }
+
+    // Start new chat
     function startNewChat() {
       const messagesDiv = document.getElementById('messages');
       messagesDiv.innerHTML = ''; // Clear all chat messages
+      const knowledgeBaseText = document.getElementById('knowledge-base').options[document.getElementById('knowledge-base').selectedIndex].text;
+      addHighlightedMessage(`Asking about ${knowledgeBaseText}`);
     }
 
+    // Send user message
     async function sendMessage() {
       const userInput = document.getElementById('user-input').value;
       const messagesDiv = document.getElementById('messages');
@@ -173,6 +191,12 @@
         messagesDiv.appendChild(errorMessage);
       }
     }
+
+    // Add a highlighted message for the initial dropdown selection on page load
+    window.onload = function () {
+      const knowledgeBaseText = document.getElementById('knowledge-base').options[document.getElementById('knowledge-base').selectedIndex].text;
+      addHighlightedMessage(`Asking about ${knowledgeBaseText}`);
+    };
   </script>
 </body>
 </html>
