@@ -161,7 +161,7 @@
 
         // Display chatbot's response
         const botMessage = document.createElement('div');
-        botMessage.textContent = `Bot: ${data.reply}`;
+        botMessage.textContent = `Siti: ${data.reply}`;
         messagesDiv.appendChild(botMessage);
 
         // Scroll to the latest message
@@ -169,7 +169,7 @@
       } catch (error) {
         console.error(error);
         const errorMessage = document.createElement('div');
-        errorMessage.textContent = 'Bot: Failed to respond. Please try again later.';
+        errorMessage.textContent = 'Siti: Oops! I'm not feeling well. Please ask me again later.';
         messagesDiv.appendChild(errorMessage);
       }
     }
