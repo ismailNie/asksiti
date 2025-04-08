@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
       'https://spaq-oai-instance-01.openai.azure.com/openai/deployments/GPT-4/chat/completions?api-version=2024-06-01',
       {
         messages: [{ role: 'user', content: augmentedPrompt }],
-        max_tokens: 1048,
+        max_tokens: 512,
         temperature: 0.2,
       },
       {
