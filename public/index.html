@@ -161,7 +161,7 @@
 
       // Display user's message
       const userMessage = document.createElement('div');
-      userMessage.textContent = `<strong>You:</strong> ${userInput}`;
+      userMessage.innerHTML = `<strong>You:</strong> ${userInput}`;
       messagesDiv.appendChild(userMessage);
 
       // Clear input field
@@ -181,7 +181,7 @@
 
         // Display chatbot's response
         const botMessage = document.createElement('div');
-        botMessage.textContent = `<strong>Siti:</strong> ${data.reply}`;
+        botMessage.innerHTML = `<strong>Siti:</strong> ${data.reply}`;
         messagesDiv.appendChild(botMessage);
 
         // Scroll to the latest message
@@ -189,7 +189,7 @@
       } catch (error) {
         console.error(error);
         const errorMessage = document.createElement('div');
-        errorMessage.textContent = '<strong>Siti:</strong> Oops! I am not feeling too well. Please ask me again later.';
+        errorMessage.innerHTML = '<strong>Siti:</strong> Oops! I am not feeling too well. Please ask me again later.';
         messagesDiv.appendChild(errorMessage);
       }
     }
