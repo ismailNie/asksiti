@@ -47,9 +47,22 @@ module.exports = async (req, res) => {
       }
     );
 
-    res.status(200).json({ reply: response.data.choices[0].message.content });
+    console.log('API Response:', response.data);
+
+    if (
+      response.data &&
+      response.data.choices &&
+      response.data.choices.length > 0 &&
+      response.data.choices[0].message
+    ) {
+      res.status(200).json({ reply: response.data.choices[0].message.content });
+    } else {
+      res.status(500).json({ error: 'Unexpected API response structure' });
+    }
   } catch (error) {
-    console.error(error.response ? error.response.data : error.message);
-    res.status(500).json({ error: 'Failed to fetch response from OpenAI API' });
+    console.error('OpenAI API Error:', error.response ? error.response.data : error.message);
+    res.status(500).json({
+      error: error.response?.data?.error?.message || 'Failed to fetch response from OpenAI API',
+    });
   }
 };
