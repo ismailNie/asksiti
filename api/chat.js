@@ -6,31 +6,37 @@ const axios = require('axios');
 let systemMessage = '';
 
 try {
-  systemMessage = fs.readFileSync(path.join(__dirname, 'system_message.txt'), 'utf-8');
+  const systemMessagePath = path.join(process.cwd(), 'public', 'system_message.txt'); // Adjust path for Vercel
+  systemMessage = fs.readFileSync(systemMessagePath, 'utf-8');
 } catch (error) {
   console.error('Failed to load system message:', error.message);
 }
 
 module.exports = async (req, res) => {
-  const { prompt, knowledgeBase } = req.body;
-
-  if (!prompt || !knowledgeBase) {
-    return res.status(400).json({ error: 'Prompt and Knowledge Base are required' });
-  }
-
-  let knowledgeBaseContent = '';
-
   try {
-    // Dynamically load the selected knowledge base
-    knowledgeBaseContent = fs.readFileSync(path.join(__dirname, knowledgeBase), 'utf-8');
-  } catch (error) {
-    console.error('Failed to load knowledge base:', error.message);
-    return res.status(500).json({ error: 'Failed to load knowledge base' });
-  }
+    console.log('Request Body:', req.body); // Log incoming request for debugging
 
-  try {
+    const { prompt, knowledgeBase } = req.body;
+
+    if (!prompt || !knowledgeBase) {
+      console.error('Missing required fields: prompt or knowledgeBase');
+      return res.status(400).json({ error: 'Prompt and Knowledge Base are required' });
+    }
+
+    let knowledgeBaseContent = '';
+    try {
+      console.log('Loading knowledge base:', knowledgeBase);
+      const knowledgeBasePath = path.join(process.cwd(), 'public', knowledgeBase); // Adjust path for Vercel
+      knowledgeBaseContent = fs.readFileSync(knowledgeBasePath, 'utf-8');
+    } catch (error) {
+      console.error('Failed to load knowledge base:', error.message);
+      return res.status(500).json({ error: 'Failed to load knowledge base' });
+    }
+
     // Combine system message, knowledge base, and user prompt
     const augmentedPrompt = `System Message:\n${systemMessage}\n\nKnowledge Base:\n${knowledgeBaseContent}\n\nUser Prompt:\n${prompt}`;
+
+    console.log('Sending augmented prompt to OpenAI:', augmentedPrompt);
 
     const response = await axios.post(
       'https://spaq-oai-instance-01.openai.azure.com/openai/deployments/GPT-4/chat/completions?api-version=2024-06-01',
@@ -57,12 +63,13 @@ module.exports = async (req, res) => {
     ) {
       res.status(200).json({ reply: response.data.choices[0].message.content });
     } else {
+      console.error('Unexpected API response structure:', response.data);
       res.status(500).json({ error: 'Unexpected API response structure' });
     }
   } catch (error) {
-    console.error('OpenAI API Error:', error.response ? error.response.data : error.message);
+    console.error('Serverless function error:', error); // Log any unhandled errors
     res.status(500).json({
-      error: error.response?.data?.error?.message || 'Failed to fetch response from OpenAI API',
+      error: error.message || 'Internal Server Error',
     });
   }
 };
