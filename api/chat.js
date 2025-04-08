@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
     }
 
     // Combine system message, knowledge base, and user prompt
-    const augmentedPrompt = `System Message:\n${systemMessage}\n\nKnowledge Base:\n${knowledgeBaseContent}\n\nUser Prompt:\n${prompt}`;
+    const augmentedPrompt = `${systemMessage}\n\nKnowledge Base:\n${knowledgeBaseContent}\n\nUser Prompt:\n${prompt}`;
 
     console.log('Sending augmented prompt to OpenAI:', augmentedPrompt);
 
