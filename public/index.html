@@ -89,6 +89,9 @@
       color: #ff5733;
       cursor: pointer;
     }
+    .speakerTag {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -181,7 +184,7 @@
 
         // Display chatbot's response
         const botMessage = document.createElement('div');
-        botMessage.textContent = `Siti: ${data.reply}`;
+        botMessage.textContent = `<span class="speakerTag">Siti</span>: ${data.reply}`;
         messagesDiv.appendChild(botMessage);
 
         // Scroll to the latest message
@@ -189,7 +192,7 @@
       } catch (error) {
         console.error(error);
         const errorMessage = document.createElement('div');
-        errorMessage.textContent = 'Siti: Oops! I am not feeling too well. Please ask me again later.';
+        errorMessage.textContent = '<span class="speakerTag">Siti</span>: Oops! I am not feeling too well. Please ask me again later.';
         messagesDiv.appendChild(errorMessage);
       }
     }
